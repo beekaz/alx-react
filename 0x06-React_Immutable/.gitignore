@@ -1,0 +1,6 @@
+node_modules
+babel.config.js
+jsconfig.json
+package*.json
+*-main.js
+.eslintrc.js
