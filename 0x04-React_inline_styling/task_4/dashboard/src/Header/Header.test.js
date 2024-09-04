@@ -1,19 +1,23 @@
-import React from 'react';
-import { shallow, render } from 'enzyme';
-import Header from './Header';
-import {StyleSheetTestUtils} from 'aphrodite';
+import React from "react";
+import Header from "./Header";
+import { shallow } from "enzyme";
+import { StyleSheetTestUtils } from "aphrodite";
 
-StyleSheetTestUtils.suppressStyleInjection();
+beforeEach(() => {
+  StyleSheetTestUtils.suppressStyleInjection();
+});
+afterEach(() => {
+  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
 
-describe("Testing Header Component", () => {
-    test('render header without crashing', () => {
-        const wrapper = shallow(<Header />)
-    })
-
-    test('render img and h1', () => {
-        const wrapper = shallow(<Header />)
-        expect(wrapper.find('img').length).toBe(1)
-        expect(wrapper.find('h1').length).toBe(1)
-    })
-    
-})
+describe("Header", () => {
+  it("render without crashing", () => {
+    const wrapper = shallow(<Header />);
+    expect(wrapper.exists()).toEqual(true);
+  });
+  it("should render a h1", () => {
+    const wrapper = shallow(<Header />);
+    expect(wrapper.exists("img")).toEqual(true);
+    expect(wrapper.containsMatchingElement(<h1>School dashboard</h1>)).toEqual(true);
+  });
+});

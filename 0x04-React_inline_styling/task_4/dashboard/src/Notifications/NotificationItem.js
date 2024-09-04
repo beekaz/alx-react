@@ -1,52 +1,60 @@
-import React, { PureComponent }  from 'react'
-import PropTypes from 'prop-types'
-import {StyleSheet, css} from 'aphrodite';
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, css } from "aphrodite";
+
+class NotificationItem extends React.PureComponent {
+  render() {
+    const { type, value, html, markAsRead, id } = this.props;
+    return (
+      <>
+        {type && value ? (
+          <li className={type === "default" ? css(styles.default) : css(styles.urgent)} onClick={() => markAsRead(id)} data-notification-type={type}>
+            {value}
+          </li>
+        ) : null}
+        {html ? <li onClick={() => markAsRead(id)} data-urgent className={css(styles.urgent)} dangerouslySetInnerHTML={{ __html: html }}></li> : null}
+      </>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  urgent: {
-    color: "red"
-  },
   default: {
-    color: "blue"
-  },
-  small: {
-    '@media (max-width: 900px)': {
+    color: "blue",
+    "@media (max-width: 375px)": {
+      borderBottom: "1px solid black",
       listStyle: "none",
-      borderBottom: "2px solid black",
-      width:"100%",
-      paddingBottom: "20px",
-      paddingTop: "15px",
-    }
-  }
-})
-
-class NotificationItem extends PureComponent {
-  render () {
-    let classname;
-    {this.props.type === "default" ? classname = styles.default : classname = styles.urgent}
-    return (
-      this.props.value ? <li data-notification-type={this.props.type} key={this.props.id} onClick={() => this.props.markAsRead(this.props.id)} className={css([classname, styles.small])}>
-              {this.props.value}
-              </li> : 
-             <li 
-            data-notification-type={this.props.type} 
-            dangerouslySetInnerHTML={this.props.html}
-            key={this.props.id}
-            onClick={() => this.props.markAsRead(this.props.id)} className={css([classname, styles.small])}>
-            </li>
-    )
-  }
-}
-
-NotificationItem.defaultProps = {
-  type: "default"
-}
+      fontSize: "20px",
+      padding: "10px 8px",
+    },
+  },
+  urgent: {
+    color: "red",
+    "@media (max-width: 375px)": {
+      borderBottom: "1px solid black",
+      listStyle: "none",
+      fontSize: "20px",
+      padding: "10px 8px",
+    },
+  },
+});
 
 NotificationItem.propTypes = {
-  html: PropTypes.shape({__html: PropTypes.string}),
   type: PropTypes.string.isRequired,
-  value: PropTypes.string
-}
+  value: PropTypes.string,
+  __html: PropTypes.shape({
+    html: PropTypes.string,
+  }),
+  markAsRead: PropTypes.func,
+  id: PropTypes.number,
+};
 
+NotificationItem.defaultProps = {
+  type: "default",
+  markAsRead: () => {
+    console.log("empty func");
+  },
+  id: 0,
+};
 
-export default NotificationItem
+export default NotificationItem;
